@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "233457962580",
+    "firebase_url": "https://people-around-3a128.firebaseio.com",
+    "project_id": "people-around-3a128",
+    "storage_bucket": "people-around-3a128.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233457962580:android:64df69494282e7c3",
+        "android_client_info": {
+          "package_name": "com.loyer.people_around"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233457962580-k4ugvgadt3dff88hfqc9k2lcujb33qa9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9TESxhWnu325BzBASZ_xnZIqyZi9HkZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
