@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:background="@color/register_screen">
+
+
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/edtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/editText_name"
+        android:padding="15dp"/>
+    <EditText
+        android:id="@+id/edtRegisterEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/editText_email"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:inputType="textEmailAddress"/>
+    <EditText
+        android:id="@+id/edtRegisterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/editText_password"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:inputType="textPassword"/>
+    <Button
+        style="@style/Button"
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_register_button"
+        android:text="@string/register_button"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"/>
+
+</LinearLayout>

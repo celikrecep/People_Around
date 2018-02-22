@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">People_Around</string>
     <string name="title_activity_maps">Map</string>
+    <string name="editText_name">Lütfen adınızı giriniz</string>
+    <string name="editText_password">Şifrenizi girin</string>
+    <string name="editText_email">Email adresinizi girin</string>
+    <string name="register_button">Kaydol</string>
+    <string name="login_button">Giriş</string>
 </resources>
