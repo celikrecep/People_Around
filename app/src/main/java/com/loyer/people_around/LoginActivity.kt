@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.util.Log
 import android.view.View
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -21,9 +22,21 @@ class LoginActivity : AppCompatActivity() {
         var fragmentRegister = FragmentRegister()
 
         var transaction: FragmentTransaction =manager!!.beginTransaction()
-        transaction.add(R.id.loginActivity,fragmentRegister,"sa")
+        transaction.add(R.id.loginActivity,fragmentRegister,"fragRegister")
         transaction.commit()
-        Log.d("REGİSTER","Button Pressed")
+        header.visibility = View.GONE
+        container.visibility = View.GONE
+        Log.d("REGISTER","Button Pressed")
 
+    }
+
+    fun signIn(view: View){
+
+        var fragmentRegister : FragmentRegister = manager!!.findFragmentByTag("fragRegister") as FragmentRegister
+        var transaction: FragmentTransaction = manager!!.beginTransaction()
+        transaction.remove(fragmentRegister)
+        transaction.commit()
+        header.visibility = View.VISIBLE
+        container.visibility = View.VISIBLE
     }
 }

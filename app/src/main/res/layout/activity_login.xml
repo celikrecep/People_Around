@@ -12,6 +12,7 @@
 
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -38,6 +39,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -66,12 +68,7 @@
 
 
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/frmContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-    </FrameLayout>
 
 
 
