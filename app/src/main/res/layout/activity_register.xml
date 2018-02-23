@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:orientation="vertical"
     android:background="@color/register_screen"
-    >
-
-
+    android:gravity="center"
+    tools:context="com.loyer.people_around.RegisterActivity">
     <EditText
         android:layout_marginTop="20dp"
         android:id="@+id/edtName"
@@ -30,6 +31,17 @@
         android:inputType="textEmailAddress"/>
     <EditText
         android:id="@+id/edtRegisterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/editText_password"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:inputType="textPassword"/>
+    <EditText
+        android:id="@+id/edtRegisterConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
