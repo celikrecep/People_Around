@@ -44,9 +44,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+
         >
         <Button
             style="@style/Button"
+            android:id="@+id/btnLoginReg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_register_button"
@@ -58,12 +62,14 @@
             />
         <Button
             style="@style/Button"
+            android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_login_button"
             android:text="@string/login_button"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:onClick="logIn"
             />
 
 

@@ -72,7 +72,7 @@ class RegisterActivity : AppCompatActivity() {
         if(cancel){
             focusView?.requestFocus()
         }else {
-            createFirebaseUser()
+            createFireBaseUser()
         }
 
     }
@@ -88,7 +88,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
 
-    fun createFirebaseUser(){
+   private fun createFireBaseUser(){
 
         var email: String = eMail?.text!!.toString()
         var passowrd: String = mPassword?.text!!.toString()
@@ -99,7 +99,7 @@ class RegisterActivity : AppCompatActivity() {
 
             if(!task.isSuccessful){
                 Log.d("Firebase","user creation failed")
-                showErroeDialog("Registration attempt failed")
+                showErrorDialog("Registration attempt failed")
             }else{
                 var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
                 startActivity(intent)
@@ -108,8 +108,8 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun showErroeDialog(message: String){
-        var alert = AlertDialog.Builder(this)
+    private fun showErrorDialog(message: String){
+        AlertDialog.Builder(this)
                 .setTitle("Oops!")
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok,null)
