@@ -3,8 +3,6 @@ package com.loyer.people_around
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.util.Log
@@ -38,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
 
     fun logIn(view: View){
         attemptLogin()
+        val intent = Intent(this@LoginActivity,MapsActivity::class.java)
+        startActivity(intent)
+        finish()
+
     }
 
 

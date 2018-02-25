@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -53,7 +54,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
         if(TextUtils.isEmpty(email)){
-            eMail?.error = getString(R.string.error_invalid_email)
+            eMail?.error = getString(R.string.error_field_required)
             focusView = eMail
             cancel = true
         }
@@ -91,9 +92,9 @@ class RegisterActivity : AppCompatActivity() {
    private fun createFireBaseUser(){
 
         var email: String = eMail?.text!!.toString()
-        var passowrd: String = mPassword?.text!!.toString()
+        var password: String = mPassword?.text!!.toString()
 
-        mAuth?.createUserWithEmailAndPassword(email,passowrd)!!.addOnCompleteListener(this){
+        mAuth?.createUserWithEmailAndPassword(email,password)!!.addOnCompleteListener(this){
             task ->
             Log.d("Firebase","createUser onComplete : " + task.isSuccessful())
 
@@ -101,7 +102,8 @@ class RegisterActivity : AppCompatActivity() {
                 Log.d("Firebase","user creation failed")
                 showErrorDialog("Registration attempt failed")
             }else{
-                var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
+                Toast.makeText(this,"Kayıt başarılı",Toast.LENGTH_SHORT).show()
+               var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }
