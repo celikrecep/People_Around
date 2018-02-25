@@ -3,6 +3,7 @@ package com.loyer.people_around
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -36,6 +37,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var locationManager: LocationManager? = null
     var latitude: Double? = 0.0
     var longitude: Double? = 0.0
+    private var mDatabaseReference: DatabaseReference? = null
+    private var name:String? = null
+    private var person:Person? = null
 
 
 
@@ -43,7 +47,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
+            mDatabaseReference = FirebaseDatabase.getInstance().reference
+        setupName()
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -77,6 +82,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     latitude = location!!.latitude
                     longitude = location!!.longitude
+                    person = Person(name,longitude,latitude)
+                    mDatabaseReference?.child("persons")!!.push().setValue(person)
                     var coordinates = LatLng(latitude!!, longitude!!)
                     //we've added a marker to our location
                     mMap!!.addMarker(MarkerOptions()
@@ -129,5 +136,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         ActivityCompat.requestPermissions(this
                 , arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
                 ,PERMISSIONS_REQUEST)
+    }
+
+    private fun setupName(){
+        var r = RegisterActivity()
+        var preferences = getSharedPreferences(r.NAME_PREFS, Context.MODE_PRIVATE)
+        name = preferences.getString(r.NAME_KEY,null)
+
     }
 }

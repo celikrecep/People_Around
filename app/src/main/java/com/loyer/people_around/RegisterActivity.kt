@@ -1,6 +1,7 @@
 package com.loyer.people_around
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -20,6 +22,8 @@ class RegisterActivity : AppCompatActivity() {
     private var name:EditText? = null
     private var mPassword: EditText? = null
     private var mConfirmPassword: EditText? = null
+    val NAME_PREFS: String = "namePrefs"
+    val NAME_KEY: String = "username"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +35,7 @@ class RegisterActivity : AppCompatActivity() {
         mPassword = findViewById(R.id.edtRegisterPassword)
         mConfirmPassword = findViewById(R.id.edtRegisterConfirm)
         mAuth = FirebaseAuth.getInstance()
+
     }
 
 
@@ -103,6 +108,7 @@ class RegisterActivity : AppCompatActivity() {
                 showErrorDialog("Registration attempt failed")
             }else{
                 Toast.makeText(this,"Kayıt başarılı",Toast.LENGTH_SHORT).show()
+                saveName()
                var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -117,6 +123,12 @@ class RegisterActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok,null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
+    }
+
+    private fun  saveName(){
+        var name: String = name?.text!!.toString()
+        var preferences: SharedPreferences= getSharedPreferences(NAME_PREFS,0)
+        preferences.edit().putString(NAME_KEY,name).apply()
     }
 
 
