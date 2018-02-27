@@ -22,6 +22,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -37,9 +39,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var locationManager: LocationManager? = null
     var latitude: Double? = 0.0
     var longitude: Double? = 0.0
-    private var mDatabaseReference: DatabaseReference? = null
-    private var name:String? = null
+    private var name:String? = "nLyer"
     private var person:Person? = null
+    private  var mDatabaseReference: DatabaseReference? = null
+    private  var mFireBaseUser: FirebaseUser? = null
 
 
 
@@ -47,11 +50,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-            mDatabaseReference = FirebaseDatabase.getInstance().reference
-        setupName()
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        mDatabaseReference = FirebaseDatabase.getInstance().reference
+        mFireBaseUser = FirebaseAuth.getInstance().currentUser
     }
 
     /**
@@ -82,8 +85,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     latitude = location!!.latitude
                     longitude = location!!.longitude
-                    person = Person(name,longitude,latitude)
-                    mDatabaseReference?.child("persons")!!.push().setValue(person)
+
+                       pushPerson(latitude,longitude)
+
                     var coordinates = LatLng(latitude!!, longitude!!)
                     //we've added a marker to our location
                     mMap!!.addMarker(MarkerOptions()
@@ -138,10 +142,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 ,PERMISSIONS_REQUEST)
     }
 
-    private fun setupName(){
-        var r = RegisterActivity()
-        var preferences = getSharedPreferences(r.NAME_PREFS, Context.MODE_PRIVATE)
-        name = preferences.getString(r.NAME_KEY,null)
 
-    }
+ private fun pushPerson(latitude: Double?, longitude: Double?){
+
+     var id: String ? = mFireBaseUser?.uid
+     person = Person(id,name,latitude,longitude)
+     mDatabaseReference?.child(id)!!.setValue(person)
+
+ }
 }

@@ -11,31 +11,29 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    private var mAuth: FirebaseAuth? = null
+    private  var mAuth: FirebaseAuth? = null
     private val TAG = "Register"
     private var eMail: EditText? = null
-    private var name:EditText? = null
+    private var mName:EditText? = null
     private var mPassword: EditText? = null
     private var mConfirmPassword: EditText? = null
-    val NAME_PREFS: String = "namePrefs"
-    val NAME_KEY: String = "username"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         eMail = findViewById(R.id.edtRegisterEmail)
-        name = findViewById(R.id.edtName)
+        mName = findViewById(R.id.edtName)
         mPassword = findViewById(R.id.edtRegisterPassword)
         mConfirmPassword = findViewById(R.id.edtRegisterConfirm)
         mAuth = FirebaseAuth.getInstance()
-
     }
 
 
@@ -108,7 +106,6 @@ class RegisterActivity : AppCompatActivity() {
                 showErrorDialog("Registration attempt failed")
             }else{
                 Toast.makeText(this,"Kayıt başarılı",Toast.LENGTH_SHORT).show()
-                saveName()
                var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -123,12 +120,6 @@ class RegisterActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok,null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
-    }
-
-    private fun  saveName(){
-        var name: String = name?.text!!.toString()
-        var preferences: SharedPreferences= getSharedPreferences(NAME_PREFS,0)
-        preferences.edit().putString(NAME_KEY,name).apply()
     }
 
 

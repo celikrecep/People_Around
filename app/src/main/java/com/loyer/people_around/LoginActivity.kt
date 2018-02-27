@@ -10,6 +10,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -18,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
     private var mEmail: EditText? = null
     private var mPassword: EditText? = null
     private var mAuth: FirebaseAuth? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -26,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         mPassword = findViewById(R.id.edtLoginPassword)
 
         mAuth = FirebaseAuth.getInstance()
+
     }
 
      fun register(view: View){
@@ -36,9 +42,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun logIn(view: View){
         attemptLogin()
-        val intent = Intent(this@LoginActivity,MapsActivity::class.java)
-        startActivity(intent)
-        finish()
+
 
     }
 
@@ -75,6 +79,9 @@ class LoginActivity : AppCompatActivity() {
                     showErrorDialog("Hatalı Email adresi yada şifre ")
                 } else {
                     Toast.makeText(this, "Login başarılı", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@LoginActivity,MapsActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
 
@@ -88,5 +95,7 @@ class LoginActivity : AppCompatActivity() {
              .setIcon(android.R.drawable.ic_dialog_alert)
              .show()
     }
+
+
 
 }
