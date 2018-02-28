@@ -31,15 +31,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val TAG = "PermissionDemo"
     private val PERMISSIONS_REQUEST = 101
-    private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1).toLong()
-    private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 10F
+    private val MIN_TIME_BW_UPDATES: Long = 1
+    private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 1F
     private val ZOOM_CAMERA = 18F
     var mMap: GoogleMap? = null
     var location: Location? = null
     var locationManager: LocationManager? = null
     var latitude: Double? = 0.0
     var longitude: Double? = 0.0
-    private var name:String? = "nLyer"
     private var person:Person? = null
     private  var mDatabaseReference: DatabaseReference? = null
     private  var mFireBaseUser: FirebaseUser? = null
@@ -88,11 +87,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                        pushPerson(latitude,longitude)
 
-                    var coordinates = LatLng(latitude!!, longitude!!)
+
+                    addMarker()
+                  /*  var coordinates = LatLng(latitude!!, longitude!!)
                     //we've added a marker to our location
                     mMap!!.addMarker(MarkerOptions()
                             .position(coordinates))
-                    mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates,ZOOM_CAMERA))
+                    mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates,ZOOM_CAMERA))*/
 
                 }
             }
@@ -119,7 +120,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //we Used for receiving notifications from the
     // LocationManager when the location has changed
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
+        override fun onLocationChanged(p0: Location) {
+            location = p0
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -130,7 +132,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setupPermission(){
         val permission = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
         if(permission != PackageManager.PERMISSION_GRANTED){
-            Log.d(TAG,"Permission to recor denied")
+            Log.d(TAG,"Permission to record denied")
             makeRequest()
         }
     }
@@ -142,12 +144,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 ,PERMISSIONS_REQUEST)
     }
 
-
+    //we'll only update specific properties.
  private fun pushPerson(latitude: Double?, longitude: Double?){
 
      var id: String ? = mFireBaseUser?.uid
-     person = Person(id,name,latitude,longitude)
-     mDatabaseReference?.child(id)!!.setValue(person)
+     mDatabaseReference?.child("persons")!!.child(id).child("latitude").setValue(latitude)
+     mDatabaseReference?.child("persons")!!.child(id).child("longitude").setValue(longitude)
+
+
 
  }
+    private fun addMarker(){
+        var coordinates = LatLng(latitude!!, longitude!!)
+        //we've added a marker to our location
+        mMap!!.addMarker(MarkerOptions()
+                .position(coordinates))
+        mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_CAMERA))
+    }
+
 }
+

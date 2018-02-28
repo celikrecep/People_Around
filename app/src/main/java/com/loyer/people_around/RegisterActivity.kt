@@ -18,14 +18,17 @@ import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    private  var mAuth: FirebaseAuth? = null
+    private var mAuth: FirebaseAuth? = null
     private val TAG = "Register"
     private var eMail: EditText? = null
-    private var mName:EditText? = null
+    private var mName: EditText? = null
     private var mPassword: EditText? = null
     private var mConfirmPassword: EditText? = null
-
+    private var mDatabaseReference: DatabaseReference? = null
+    private var mFireBaseUser: FirebaseUser? = null
+    var person: Person? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
@@ -34,17 +37,20 @@ class RegisterActivity : AppCompatActivity() {
         mPassword = findViewById(R.id.edtRegisterPassword)
         mConfirmPassword = findViewById(R.id.edtRegisterConfirm)
         mAuth = FirebaseAuth.getInstance()
+        mFireBaseUser = mAuth?.currentUser
+        mDatabaseReference = FirebaseDatabase.getInstance().reference
     }
 
 
-    fun signIn(view: View){
+    fun signIn(view: View) {
 
         attemptRegistration()
 
+
     }
 
 
-    private fun attemptRegistration(){
+    private fun attemptRegistration() {
 
         eMail?.error = null
         eMail?.error = null
@@ -56,70 +62,90 @@ class RegisterActivity : AppCompatActivity() {
 
 
 
-        if(TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             eMail?.error = getString(R.string.error_field_required)
             focusView = eMail
             cancel = true
         }
 
-        if(!TextUtils.isEmpty(password) && !isValidPassword(password)){
+        if (!TextUtils.isEmpty(password) && !isValidPassword(password)) {
             mPassword?.error = getString(R.string.error_invalid_password)
             focusView = mPassword
             cancel = true
 
-        }else if(!isEmailValid(email)){
+        } else if (!isEmailValid(email)) {
             eMail?.error = getString(R.string.error_invalid_email)
             focusView = eMail
             cancel = true
         }
 
-        if(cancel){
+        if (cancel) {
             focusView?.requestFocus()
-        }else {
+        } else {
             createFireBaseUser()
+
         }
 
     }
 
-    private fun isEmailValid(email: String):Boolean{
+    private fun isEmailValid(email: String): Boolean {
         return email.contains("@")
     }
 
-    private fun isValidPassword(password: String):Boolean{
+    private fun isValidPassword(password: String): Boolean {
         var confirmPassword = mConfirmPassword?.text!!.toString()
         return confirmPassword.equals(password) && password.length > 6
     }
 
 
-
-   private fun createFireBaseUser(){
+    private fun createFireBaseUser() {
 
         var email: String = eMail?.text!!.toString()
         var password: String = mPassword?.text!!.toString()
 
-        mAuth?.createUserWithEmailAndPassword(email,password)!!.addOnCompleteListener(this){
-            task ->
-            Log.d("Firebase","createUser onComplete : " + task.isSuccessful())
 
-            if(!task.isSuccessful){
-                Log.d("Firebase","user creation failed")
+        mAuth?.createUserWithEmailAndPassword(email, password)!!.addOnCompleteListener(this) { task ->
+            Log.d(TAG, "createUser onComplete : " + task.isSuccessful())
+
+            if (!task.isSuccessful) {
+                Log.d(TAG, "user creation failed")
                 showErrorDialog("Registration attempt failed")
-            }else{
-                Toast.makeText(this,"Kayıt başarılı",Toast.LENGTH_SHORT).show()
-               var intent = Intent(this@RegisterActivity,LoginActivity::class.java)
+            } else {
+                Toast.makeText(this, "Kayıt başarılı", Toast.LENGTH_SHORT).show()
+                var intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }
         }
+        signInAndSignOut()
+
     }
 
-    private fun showErrorDialog(message: String){
+    private fun showErrorDialog(message: String) {
         AlertDialog.Builder(this)
                 .setTitle("Oops!")
                 .setMessage(message)
-                .setPositiveButton(android.R.string.ok,null)
+                .setPositiveButton(android.R.string.ok, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
+    }
+        //we gonna push the username to pull later to MapsActivity
+    private fun signInAndSignOut(){
+        var email: String = eMail?.text!!.toString()
+        var password: String = mPassword?.text!!.toString()
+        var name: String = mName?.text!!.toString()
+
+
+        mAuth?.signInWithEmailAndPassword(email,password)!!.addOnCompleteListener {
+           var id: String?  = mFireBaseUser?.uid
+            person = Person(id,name,0.0,0.0)
+            mDatabaseReference?.child("persons")!!.child(id).setValue(person)
+            mAuth?.signOut()
+
+        }
+
+
+
     }
 
 
