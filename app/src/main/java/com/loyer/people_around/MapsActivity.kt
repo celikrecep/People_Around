@@ -24,8 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -42,6 +41,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var person:Person? = null
     private  var mDatabaseReference: DatabaseReference? = null
     private  var mFireBaseUser: FirebaseUser? = null
+    private var reference: DatabaseReference? = null
+    private  var list: ArrayList<Person?> = ArrayList()
 
 
 
@@ -49,11 +50,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        setupPermission()
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         mDatabaseReference = FirebaseDatabase.getInstance().reference
         mFireBaseUser = FirebaseAuth.getInstance().currentUser
+        reference = mDatabaseReference?.child("persons")
+
     }
 
     /**
@@ -86,6 +90,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     longitude = location!!.longitude
 
                        pushPerson(latitude,longitude)
+
 
 
                     addMarker()
@@ -153,14 +158,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
+
  }
     private fun addMarker(){
+        allPull()
         var coordinates = LatLng(latitude!!, longitude!!)
         //we've added a marker to our location
         mMap!!.addMarker(MarkerOptions()
                 .position(coordinates))
         mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_CAMERA))
     }
+
+    private fun allPull(){
+        val toReturn: ArrayList<Person> = ArrayList()
+
+        val postListener = object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+                for(data in p0!!.children){
+                    var personData = data.getValue<Person>(Person::class.java)
+                     var prs = personData?.let { it }?:continue
+                    toReturn.add(prs)
+
+                }
+                Log.d("List",toReturn[0].getName())
+                Log.d("List",toReturn[1].getName())
+            }
+
+        }
+        mDatabaseReference?.child("persons")!!.addValueEventListener(postListener)
+    }
+
 
 }
 

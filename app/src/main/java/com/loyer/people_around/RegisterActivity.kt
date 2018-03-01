@@ -129,7 +129,7 @@ class RegisterActivity : AppCompatActivity() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
     }
-        //we gonna push the username to pull later to MapsActivity
+        //we gonna push the user name to pull later to MapsActivity
     private fun signInAndSignOut(){
         var email: String = eMail?.text!!.toString()
         var password: String = mPassword?.text!!.toString()

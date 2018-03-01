@@ -3,16 +3,25 @@ package com.loyer.people_around
 /**
  * Created by loyer on 24.02.2018.
  */
-data class Person(private var id:String?,
-                  private var latitude: Double?,
-                  private var longitude: Double?) {
+  class Person {
     constructor(id: String?,  name: String?, latitude: Double?, longitude: Double?):this(id,latitude,longitude){
         this.name = name
+        this.id = id
+        this.latitude = latitude
+        this.longitude = longitude
 
     }
+    constructor(id: String?,latitude: Double?, longitude: Double?){
+        this.id = id
+        this.latitude = latitude
+        this.longitude = longitude
+    }
+    constructor()
+
     private var name: String? = null
-
-
+    private var id: String? = null
+    private var latitude: Double? = null
+    private var longitude: Double? = null
 
     fun getId(): String?{
         return id
@@ -20,7 +29,6 @@ data class Person(private var id:String?,
     fun getName(): String?{
         return name
     }
-
     fun getLatitude(): Double?{
         return latitude
     }
