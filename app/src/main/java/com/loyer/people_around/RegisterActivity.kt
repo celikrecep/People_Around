@@ -26,7 +26,7 @@ class RegisterActivity : AppCompatActivity() {
     private var mConfirmPassword: EditText? = null
     private var mDatabaseReference: DatabaseReference? = null
     private var mFireBaseUser: FirebaseUser? = null
-    var person: Person? = null
+    private var user: User? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -87,13 +87,13 @@ class RegisterActivity : AppCompatActivity() {
         }
 
     }
-
+    //email check
     private fun isEmailValid(email: String): Boolean {
         return email.contains("@")
     }
-
+    //password check
     private fun isValidPassword(password: String): Boolean {
-        var confirmPassword = mConfirmPassword?.text!!.toString()
+        val confirmPassword = mConfirmPassword?.text!!.toString()
         return confirmPassword.equals(password) && password.length > 6
     }
 
@@ -129,7 +129,7 @@ class RegisterActivity : AppCompatActivity() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
     }
-        //we gonna push the user name to pull later to MapsActivity
+        //we gonna set the user name to later get from MapsActivity
     private fun signInAndSignOut(){
         var email: String = eMail?.text!!.toString()
         var password: String = mPassword?.text!!.toString()
@@ -138,8 +138,8 @@ class RegisterActivity : AppCompatActivity() {
 
         mAuth?.signInWithEmailAndPassword(email,password)!!.addOnCompleteListener {
            var id: String?  = mFireBaseUser?.uid
-            person = Person(id,name,0.0,0.0)
-            mDatabaseReference?.child("persons")!!.child(id).setValue(person)
+            user = User(id,name,0.0,0.0)
+            mDatabaseReference?.child("persons")!!.child(id).setValue(user)
             mAuth?.signOut()
 
         }

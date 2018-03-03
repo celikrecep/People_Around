@@ -33,16 +33,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val MIN_TIME_BW_UPDATES: Long = 1
     private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 1F
     private val ZOOM_CAMERA = 18F
-    var mMap: GoogleMap? = null
-    var location: Location? = null
-    var locationManager: LocationManager? = null
-    var latitude: Double? = 0.0
-    var longitude: Double? = 0.0
-    private var person:Person? = null
-    private  var mDatabaseReference: DatabaseReference? = null
-    private  var mFireBaseUser: FirebaseUser? = null
+    private var mMap: GoogleMap? = null
+    private var location: Location? = null
+    private var locationManager: LocationManager? = null
+    private var latitude: Double? = 0.0
+    private var longitude: Double? = 0.0
+    private var mDatabaseReference: DatabaseReference? = null
+    private var mFireBaseUser: FirebaseUser? = null
     private var reference: DatabaseReference? = null
-    private  var list: ArrayList<Person?> = ArrayList()
+    private lateinit var userList: ArrayList<User>
+    private var mName: String? = null
 
 
 
@@ -57,6 +57,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mDatabaseReference = FirebaseDatabase.getInstance().reference
         mFireBaseUser = FirebaseAuth.getInstance().currentUser
         reference = mDatabaseReference?.child("persons")
+        userList = ArrayList()
 
     }
 
@@ -88,23 +89,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     latitude = location!!.latitude
                     longitude = location!!.longitude
-
-                       pushPerson(latitude,longitude)
-
-
-
-                    addMarker()
-                  /*  var coordinates = LatLng(latitude!!, longitude!!)
-                    //we've added a marker to our location
-                    mMap!!.addMarker(MarkerOptions()
-                            .position(coordinates))
-                    mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates,ZOOM_CAMERA))*/
-
+                    // update  Longitude and Latitude
+                    pushUser(latitude,longitude)
+                    getUsers()
                 }
             }
         }
-
-    }
+ }
 
     //When the user has responded to the permission request
     // the onRequestPermissionsResult() method will be
@@ -150,47 +141,59 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     //we'll only update specific properties.
- private fun pushPerson(latitude: Double?, longitude: Double?){
+ private fun pushUser(latitude: Double?, longitude: Double?){
 
      var id: String ? = mFireBaseUser?.uid
      mDatabaseReference?.child("persons")!!.child(id).child("latitude").setValue(latitude)
      mDatabaseReference?.child("persons")!!.child(id).child("longitude").setValue(longitude)
 
-
-
-
  }
-    private fun addMarker(){
-        allPull()
-        var coordinates = LatLng(latitude!!, longitude!!)
-        //we've added a marker to our location
-        mMap!!.addMarker(MarkerOptions()
-                .position(coordinates))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_CAMERA))
-    }
 
-    private fun allPull(){
-        val toReturn: ArrayList<Person> = ArrayList()
+    private fun addMarker(){
+
+        for(user in userList){
+
+            if(user.getId() == mFireBaseUser!!.uid){
+               mName = user.getName()
+                var coordinates = LatLng(latitude!!, longitude!!)
+                mMap!!.addMarker(MarkerOptions()
+                        .position(coordinates)
+                        .title(mName))
+                mMap!!.moveCamera(CameraUpdateFactory
+                        .newLatLngZoom(coordinates, ZOOM_CAMERA))
+            }else {
+
+                var coor = LatLng(user.getLatitude()!!, user.getLongitude()!!)
+                mMap!!.addMarker(MarkerOptions()
+                        .title(user.getName())
+                        .position(coor))
+            }
+        }
+
+    }
+            //get all user from Database
+    private fun getUsers(){
 
         val postListener = object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onDataChange(p0: DataSnapshot?) {
+
                 for(data in p0!!.children){
-                    var personData = data.getValue<Person>(Person::class.java)
-                     var prs = personData?.let { it }?:continue
-                    toReturn.add(prs)
+                    var userData = data.getValue<User>(User::class.java)
+                     var usr = userData?.let { it }?:continue
+                    userList.add(usr)
 
                 }
-                Log.d("List",toReturn[0].getName())
-                Log.d("List",toReturn[1].getName())
+                Log.d("List",userList.size.toString())
+                addMarker()
             }
-
         }
         mDatabaseReference?.child("persons")!!.addValueEventListener(postListener)
     }
+
+
+
 
 
 }

@@ -3,19 +3,15 @@ package com.loyer.people_around
 /**
  * Created by loyer on 24.02.2018.
  */
-  class Person {
-    constructor(id: String?,  name: String?, latitude: Double?, longitude: Double?):this(id,latitude,longitude){
+  class User {
+    constructor(id: String?,  name: String?, latitude: Double?, longitude: Double?):this(){
         this.name = name
         this.id = id
         this.latitude = latitude
         this.longitude = longitude
 
     }
-    constructor(id: String?,latitude: Double?, longitude: Double?){
-        this.id = id
-        this.latitude = latitude
-        this.longitude = longitude
-    }
+
     constructor()
 
     private var name: String? = null

@@ -42,8 +42,6 @@ class LoginActivity : AppCompatActivity() {
 
     fun logIn(view: View){
         attemptLogin()
-
-
     }
 
 
